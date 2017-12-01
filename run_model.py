@@ -4,6 +4,8 @@ import tensorflow as tf
 from data_feed import DataFeed
 from nns.batch_norm import get_batch_norm_model
 from nns.con_b_max_lstm_lin import get_conv_b_max_lstm_lin_model
+from nns.conv10_b_max_pool5_lstm_10_lin_10 import get_conv10_b_max_pool5_lstm_10_lin_10_model
+from nns.conv5_b_max_pool5_lstm_5_lin_5 import get_conv5_b_max_pool5_lstm_5_lin_5_model
 from nns.conv5_max_pool5_lstm_5_lin_5 import get_conv5_max_pool5_lstm_5_lin_5_model
 from nns.conv_linear import get_conv_linear_model
 from nns.conv_max_pool import get_max_pool_convolution_model
@@ -15,6 +17,7 @@ from nns.lstm import get_lstm_model
 import inquirer
 
 from nns.lstm_conv_max_lin import get_conv_max_lstm_lin_model
+from nns.tensorflow_guide_99p import get_tensorflow_guide_99p_model
 
 model_dir = "./models"
 
@@ -22,9 +25,9 @@ models = {
     'linear': {
         'nn': get_linear_model
     },
-    # 'batch_norm': {
-    #     'nn': get_batch_norm_model
-    # },
+    'tensorflow_guide_99p': {
+        'nn': get_tensorflow_guide_99p_model
+    },
     'convolution': {
         'nn': get_convolutional_model
     },
@@ -42,6 +45,12 @@ models = {
     },
     'conv5_max_pool5_lstm_5_lin_5': {
         'nn': get_conv5_max_pool5_lstm_5_lin_5_model
+    },
+    'conv5_b_max_pool5_lstm_5_lin_5': {
+        'nn': get_conv5_b_max_pool5_lstm_5_lin_5_model
+    },
+    'conv10_b_max_pool5_lstm_10_lin_10': {
+        'nn': get_conv10_b_max_pool5_lstm_10_lin_10_model
     },
     'lstm': {
         'nn': get_lstm_model

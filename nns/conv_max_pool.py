@@ -43,7 +43,7 @@ def get_max_pool_convolution_model(x, y_, *args):
                     + 0.001 * tf.nn.l2_loss(W)
 
     # Training
-    train_step = tf.train.AdamOptimizer().minimize(cross_entropy)
+    train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
     # train_step = tf.train.GradientDescentOptimizer(0.05).minimize(cross_entropy)
 
     return tf.nn.softmax(linear_out), train_step
