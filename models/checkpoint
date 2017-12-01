@@ -1,0 +1,2 @@
+model_checkpoint_path: "conv10_b_max_pool5_lstm_10_lin_10.ckpt"
+all_model_checkpoint_paths: "conv10_b_max_pool5_lstm_10_lin_10.ckpt"
