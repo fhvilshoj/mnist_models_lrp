@@ -33,6 +33,10 @@ class DataFeed(object):
 
         return self.data['train_images'][selection], self.data['train_labels'][selection]
 
+    def train(self, size=1000):
+        selection = np.random.permutation(self.max)[:size]
+        return self.data['train_images'][selection], self.data['train_labels'][selection]
+
     def validation(self):
         return self.data['validation_images'], self.data['validation_labels']
 
