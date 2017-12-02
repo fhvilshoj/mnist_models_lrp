@@ -26,12 +26,7 @@ def get_eight_blocks(*args):
 
 
 def get_model_with_bolcks(blocks, x, y_, is_training, *args):
-    keep_prob = tf.cond(is_training,
-                        true_fn=lambda: 0.8,
-                        false_fn=lambda: 1.)
-
     output = x
-
     for i in range(blocks):
         with tf.name_scope("block_{}".format(i)):
             output = tf.reshape(output, (-1, 28, 28, 1))

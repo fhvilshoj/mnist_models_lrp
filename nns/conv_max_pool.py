@@ -19,7 +19,6 @@ def get_max_pool_convolution_model(x, y_, *args):
     with tf.name_scope("max_pool"):
         max_out = tf.nn.max_pool(conv_out, [1, 2, 2, 1], [1, 2, 2, 1], 'SAME')
 
-        print(max_out)
         # Shape (None, 784)
         max_out = tf.reshape(max_out, (-1, 14*14*2))
 

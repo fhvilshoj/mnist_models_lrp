@@ -3,6 +3,9 @@ import tensorflow as tf
 import numpy as np
 import inquirer
 import sys
+import os
+
+from configuration import LOG_LEVEL
 
 from data_feed import DataFeed
 
@@ -17,6 +20,7 @@ from nns.lstm import get_lstm_model
 from nns.tensorflow_guide_99p import get_tensorflow_guide_99p_model
 
 from config_selection import configurations
+from config_selection import logger
 from config_selection.result_file_writer import ResultWriter
 from lrp import lrp
 
@@ -67,8 +71,16 @@ def get_initializer(train):
     return init
 
 
-def run_model(selected_model_names, train, iterations, batch_size, **kwargs):
+def run_model(selected_model_names, **kwargs):
     configs = configurations.get_configurations()
+
+    destination = "./pertubation/results"
+
+    i = 1
+    d = destination
+    while os.path.exists(d):
+        d = "{}_{:02}".format(destination, i)
+        i += 1
 
     for selected_model_name in selected_model_names:
         print("#"*40)
@@ -78,44 +90,50 @@ def run_model(selected_model_names, train, iterations, batch_size, **kwargs):
         model_file = '%s/%s.ckpt' % (model_dir, selected_model_name)
 
         if kwargs['lrp']:
-            do_lrp_pertubation_tests(configs, selected_model, model_file, **kwargs)
+            do_lrp_pertubation_tests(configs, selected_model, model_file,
+                                     destination="%s/%s" % (d, selected_model_name), **kwargs)
         else:
-            test_model(batch_size, iterations, model_file, selected_model, train, **kwargs)
+            test_model(model_file, selected_model, **kwargs)
 
 
-def do_pertubations(config, session, feed, explanation, iterations, batch_size, test_size, writer, x, y):
-    for iter in range(iterations):
-        x_, y_ = feed.next(batch_size)
+def do_pertubations(config, session, feed, explanation, iterations, batch_size, pertubations, writer, x_placeholder, y):
+    for iteration in range(iterations):
+        x_input, y_ = feed.next(batch_size)
+        y_ = np.argmax(y_, axis=1)
 
-        y_hat = session.run(y, feed_dict={x: x_})
+        l = lambda x: (x, type(x))
 
+        y_hat = session.run(y, feed_dict={x_placeholder: x_input})
         y_hat = np.argmax(y_hat, axis=1)
 
-        explanation = session.run(explanation, feed_dict={x: x_})
+        expl = session.run(explanation, feed_dict={x_placeholder: x_input})
+        batch_range = np.arange(batch_size)
 
         predictions = []
-        for i in range(test_size):
+        for i in range(pertubations):
             # Print progress
             sys.stdout.write('\r')
             sys.stdout.write("[%-20s] %d%%" % (
-                '=' * int((20 * (iter * test_size + i)) / (iterations * test_size)),
-                (100 * (iter * test_size + i)) / (iterations * test_size)))
+                '=' * int((20 * (iteration * pertubations + i)) / (iterations * pertubations)),
+                (100 * (iteration * pertubations + i)) / (iterations * pertubations)))
             sys.stdout.flush()
 
             # Prediction has shape (batch_size, 10)
-            prediction = session.run(y, feed_dict={x: x_})
-            predictions.append(prediction)
+            prediction = session.run(y, feed_dict={x_placeholder: x_input})
+            predictions.append(prediction[batch_range, y_hat])
 
             # Alter input
-            expl_argmax = np.argmax(explanation, axis=1)
-            x_[np.arange(batch_size), expl_argmax] = 0
-            explanation[np.arange(batch_size), expl_argmax] = -100
+            expl_argmax = np.argmax(expl, axis=1)
+
+            x_input[batch_range, expl_argmax] = 0
+            expl[batch_range, expl_argmax] = -100
 
         # Predictions has shape (test_size, batch_size, 10)
         predictions = np.array(predictions)
+        predictions = predictions.reshape((pertubations, batch_size, 1))
 
         # Reshape predictions to have shape (batch_size, 10, test_size)
-        predictions = predictions.transpose([1, 0, 2])
+        predictions = predictions.transpose([1, 2, 0])
 
         # Write the results to file
         writer.write_result(config, y_, y_hat, predictions)
@@ -125,13 +143,13 @@ def do_pertubations(config, session, feed, explanation, iterations, batch_size, 
     sys.stdout.flush()
 
 
-def do_lrp_pertubation_tests(configs, selected_model, model_file, test_size, batch_size, **kwargs):
-    result_writer = ResultWriter('./pertubation/results')
+def do_lrp_pertubation_tests(configs, selected_model, model_file, destination, **kwargs):
+    result_writer = ResultWriter(destination)
     feed = DataFeed()
 
-    iterations = test_size // batch_size
+    iterations = kwargs['test_size'] // kwargs['batch_size']
 
-    for config in configs:
+    for config in configs[:3]:
         graph = tf.Graph()
         feed.reset_permutation()
 
@@ -139,10 +157,11 @@ def do_lrp_pertubation_tests(configs, selected_model, model_file, test_size, bat
             x = tf.placeholder(tf.float32, shape=[None, 784])
             y_ = tf.placeholder(tf.float32, shape=[None, 10])
 
-            is_training = tf.constant(False, tf.bool)
+            is_training = False
 
-            y, _= selected_model['nn'](x, y_, is_training)
+            y, _ = selected_model['nn'](x, y_, is_training)
 
+            print("Constructing lrp with configuration {}".format(config))
             explanation = lrp.lrp(x, y, config)
 
             init = get_initializer(False)
@@ -157,11 +176,10 @@ def do_lrp_pertubation_tests(configs, selected_model, model_file, test_size, bat
                 s.run(init)
                 saver.restore(s, model_file)
 
+                do_pertubations(config, s, feed, explanation, iterations, kwargs['batch_size'], kwargs['pertubations'], result_writer, x, y)
 
 
-
-
-def test_model(batch_size, iterations, model_file, selected_model, train, **kwargs):
+def test_model(model_file, selected_model, **kwargs):
     graph = tf.Graph()
     with graph.as_default():
         x = tf.placeholder(tf.float32, shape=[None, 784])
@@ -178,6 +196,7 @@ def test_model(batch_size, iterations, model_file, selected_model, train, **kwar
 
         feed = DataFeed()
 
+        train = kwargs['train']
         init = get_initializer(train)
 
         important_variables = tf.trainable_variables()
@@ -194,12 +213,11 @@ def test_model(batch_size, iterations, model_file, selected_model, train, **kwar
 
                 # Train the model
                 try:
-                    for i in range(iterations):
-                        batch = feed.next(batch_size)
+                    for i in range(kwargs['iterations']):
+                        batch = feed.next(kwargs['batch_size'])
                         s.run(train_step, feed_dict={x: batch[0], y_: batch[1], is_training: True})
 
                         if i % 200 == 0:
-                            print(feed.offset)
                             tra_batch = feed.train()
                             val_batch = feed.validation()
                             train_acc = s.run(accuracy,
@@ -236,10 +254,14 @@ if __name__ == '__main__':
                         help='Restore model to continue training')
     parser.add_argument('--lrp', action='store_true',
                         help='Do lrp pertubation tests on models')
+    parser.add_argument('-p', '--pertubations', type=int, default=100)
     parser.add_argument('-t', '--test-size', type=int, default=1000,
                         help='Do pertubations on `test-size` samples')
 
     args = parser.parse_args()
+
+    # Disable console prints
+    logger.handlers[0].setLevel(30)
 
     model_keys = [k for k in models.keys()]
     model_keys.sort()
@@ -252,6 +274,8 @@ if __name__ == '__main__':
     ]
     selected_models = inquirer.prompt(questions)['models']
     print(selected_models)
+
+
 
     # Call config selection with gathered arguments
     run_model(selected_models, **vars(args))

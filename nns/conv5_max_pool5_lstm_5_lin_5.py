@@ -42,7 +42,6 @@ def get_conv5_max_pool5_lstm_5_lin_5_model(x, y_, is_training, *args):
 
             o_size = math.ceil(o_size / 2)
 
-    print(output)
     output = tf.reshape(output, (-1, 64))
 
     for i in range(5):

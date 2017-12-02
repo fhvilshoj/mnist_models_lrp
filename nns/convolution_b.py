@@ -28,8 +28,6 @@ def get_convolutional_b_model(x, y_, is_training):
         # Shape (None, 784)
         conv_out = tf.reshape(conv_out, (-1, 784*2))
 
-    conv_out = tf.nn.dropout()
-
     with tf.name_scope("linear"):
         W = tf.Variable(tf.truncated_normal((784*2, 10), stddev=0.1),
                         trainable=True)
