@@ -54,6 +54,8 @@ def get_model_with_bolcks(blocks, x, y_, is_training, *args):
                     center=True,
                     scale=False,
                     is_training=is_training,
+                    trainable=True,
+                    variables_collections=tf.GraphKeys.TRAINABLE_VARIABLES
                 )
 
             # Shape (None, 28, 28, 2)
