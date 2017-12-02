@@ -98,7 +98,7 @@ def get_model_with_bolcks(blocks, x, y_, is_training, *args):
     cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y_, logits=y))
 
     # Training
-    optimizer = tf.train.AdamOptimizer(1.e-4).minimize(cross_entropy)
+    optimizer = tf.train.AdamOptimizer(1.e-4)
     with tf.control_dependencies(tf.get_collection(tf.GraphKeys.UPDATE_OPS)):
         train_step = optimizer.minimize(cross_entropy)
 
