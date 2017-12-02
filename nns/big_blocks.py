@@ -55,14 +55,15 @@ def get_model_with_bolcks(blocks, x, y_, is_training, *args):
 
             with tf.name_scope("lstm_{}".format(i)):
                 lstm_units = 64
-            with tf.variable_scope("lstm_{}".format(i)):
-                # Create lstm layer
-                lstm = tf.contrib.rnn.LSTMCell(lstm_units, forget_bias=0.)
-            # Put it into Multi RNN Cell
-            lstm = tf.contrib.rnn.MultiRNNCell([lstm])
-            # Let dynamic rnn setup the control flow (making while loops and stuff)
-            # lstm_output shape: (None, 28, 5)
-            lstm_output, _ = tf.nn.dynamic_rnn(lstm, max_out, dtype=tf.float32)
+
+                with tf.variable_scope("lstm_{}".format(i)):
+                    # Create lstm layer
+                    lstm = tf.contrib.rnn.LSTMCell(lstm_units, forget_bias=0.)
+                    # Put it into Multi RNN Cell
+                    lstm = tf.contrib.rnn.MultiRNNCell([lstm])
+                    # Let dynamic rnn setup the control flow (making while loops and stuff)
+                    # lstm_output shape: (None, 28, 5)
+                    lstm_output, _ = tf.nn.dynamic_rnn(lstm, max_out, dtype=tf.float32)
 
             lstm_output_reshaped = tf.reshape(lstm_output, (-1, 14 * lstm_units))
 
