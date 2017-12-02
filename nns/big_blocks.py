@@ -40,7 +40,7 @@ def get_model_with_bolcks(blocks, x, y_, is_training, *args):
                 conv_out = tf.contrib.layers.batch_norm(
                     conv_out,
                     center=True,
-                    scale=False,
+                    scale=True,
                     is_training=is_training,
                 )
 
@@ -77,7 +77,7 @@ def get_model_with_bolcks(blocks, x, y_, is_training, *args):
 
                 output = tf.nn.relu(lin_activation)
 
-            # linear_out = tf.nn.dropout(linear_out, keep_prob)
+                # linear_out = tf.nn.dropout(linear_out, keep_prob)
 
     # output = tf.nn.dropout(output, keep_prob)
 
@@ -98,7 +98,10 @@ def get_model_with_bolcks(blocks, x, y_, is_training, *args):
     cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y_, logits=y))
 
     # Training
-    train_step = tf.train.AdamOptimizer(1.e-4).minimize(cross_entropy)
+    optimizer = tf.train.AdamOptimizer(1.e-4).minimize(cross_entropy)
+    with tf.control_dependencies(tf.get_collection(tf.GraphKeys.UPDATE_OPS)):
+        train_step = optimizer.minimize(cross_entropy)
+
     # train_step = tf.train.GradientDescentOptimizer(0.001).minimize(cross_entropy)
 
     return tf.nn.softmax(linear_out), train_step
