@@ -1,7 +1,6 @@
 import argparse
 import tensorflow as tf
 import numpy as np
-import inquirer
 import sys
 import os
 
@@ -148,8 +147,10 @@ def do_lrp_pertubation_tests(configs, selected_model, model_file, destination, *
     feed = DataFeed()
 
     iterations = kwargs['test_size'] // kwargs['batch_size']
-
-    for config in configs:
+    start = 0
+    end = 240
+    for i, config in enumerate(configs[start:end]):
+        logger.info("Starting config {} of {}".format(start + i + 1, end))
         graph = tf.Graph()
         feed.reset_permutation()
 
@@ -261,21 +262,21 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # Disable console prints
-    logger.handlers[0].setLevel(30)
+    #logger.handlers[0].setLevel(30)
 
-    model_keys = [k for k in models.keys()]
-    model_keys.sort()
+#    model_keys = [k for k in models.keys()]
+#    model_keys.sort()
 
-    questions = [
-        inquirer.Checkbox('models',
-                          message="Which models to run?",
-                          choices=model_keys,
-                          ),
-    ]
-    selected_models = inquirer.prompt(questions)['models']
-    print(selected_models)
+#    questions = [
+#        inquirer.Checkbox('models',
+#                          message="Which models to run?",
+#                          choices=model_keys,
+#                          ),
+#    ]
 
-
+#    selected_models = inquirer.prompt(questions)['models']
+#    print(selected_models)    
+    selected_models = ['big_block_08']
 
     # Call config selection with gathered arguments
     run_model(selected_models, **vars(args))
