@@ -1,2 +1,2 @@
-model_checkpoint_path: "convolution_b.ckpt"
-all_model_checkpoint_paths: "convolution_b.ckpt"
+model_checkpoint_path: "big_block_08.ckpt"
+all_model_checkpoint_paths: "big_block_08.ckpt"
