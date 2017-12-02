@@ -17,7 +17,7 @@ def get_conv10_b_max_pool5_lstm_10_lin_10_model(x, y_, is_training, *args):
             output_depth *= 2
 
             # Kernel shape (height, width, input_channels, output_channels)
-            K = tf.Variable(tf.truncated_normal((5, 5, input_depth, output_depth), stddev=0.1))
+            K = tf.Variable(tf.truncated_normal((5, 5, input_depth, output_depth), stddev=0.01))
             kb = tf.Variable(tf.constant(0.1, shape=[output_depth, ]))
 
             conv_out = tf.nn.conv2d(output, K, [1, 1, 1, 1], 'SAME')
@@ -29,7 +29,7 @@ def get_conv10_b_max_pool5_lstm_10_lin_10_model(x, y_, is_training, *args):
                 scale=False,
                 is_training=is_training,
                 updates_collections=None,
-                decay=0.99
+                decay=0.9
             )
 
             # Shape (None, 28, 28, 1)
@@ -38,7 +38,7 @@ def get_conv10_b_max_pool5_lstm_10_lin_10_model(x, y_, is_training, *args):
         with tf.name_scope("conv_{}_2".format(i)):
 
             # Kernel shape (height, width, input_channels, output_channels)
-            K = tf.Variable(tf.truncated_normal((3, 3, output_depth, output_depth), stddev=0.1))
+            K = tf.Variable(tf.truncated_normal((3, 3, output_depth, output_depth), stddev=0.01))
             kb = tf.Variable(tf.constant(0.1, shape=[output_depth, ]))
 
             input_depth = output_depth
@@ -52,7 +52,7 @@ def get_conv10_b_max_pool5_lstm_10_lin_10_model(x, y_, is_training, *args):
                 scale=False,
                 is_training=is_training,
                 updates_collections=None,
-                decay=0.99
+                decay=0.9
             )
 
             # Shape (None, 28, 28, 1)
@@ -96,7 +96,7 @@ def get_conv10_b_max_pool5_lstm_10_lin_10_model(x, y_, is_training, *args):
     with tf.name_scope("linear_out"):
         W2 = tf.Variable(tf.truncated_normal((64, 10), stddev=0.1),
                          trainable=True)
-        b2 = tf.Variable(tf.constant(0.1, shape=(10,), dtype=tf.float32))
+        b2 = tf.Variable(tf.constant(1., shape=(10,), dtype=tf.float32))
 
         linear_out = tf.matmul(output, W2) + b2
 
@@ -111,7 +111,7 @@ def get_conv10_b_max_pool5_lstm_10_lin_10_model(x, y_, is_training, *args):
         tf.nn.softmax_cross_entropy_with_logits(labels=y_, logits=y))
 
     # Training
-    train_step = tf.train.AdamOptimizer(.5e-4).minimize(cross_entropy)
-    # train_step = tf.train.GradientDescentOptimizer(0.001).minimize(cross_entropy)
+    # train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
+    train_step = tf.train.GradientDescentOptimizer(1e-4).minimize(cross_entropy)
 
     return tf.nn.softmax(linear_out), train_step

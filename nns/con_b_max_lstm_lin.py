@@ -9,7 +9,6 @@ def get_conv_b_max_lstm_lin_model(x, y_, is_training, *args):
     # X has shape (None, 784)
     with tf.name_scope("conv"):
         output_depth = 4
-
         input_reshaped = tf.reshape(x, (-1, 28, 28, 1))
 
         # Kernel shape (height, width, input_channels, output_channels)

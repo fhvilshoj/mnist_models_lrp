@@ -3,12 +3,14 @@ import tensorflow as tf
 
 from data_feed import DataFeed
 from nns.batch_norm import get_batch_norm_model
+from nns.big_blocks import get_one_block, get_five_blocks, get_ten_blocks
 from nns.con_b_max_lstm_lin import get_conv_b_max_lstm_lin_model
 from nns.conv10_b_max_pool5_lstm_10_lin_10 import get_conv10_b_max_pool5_lstm_10_lin_10_model
 from nns.conv5_b_max_pool5_lstm_5_lin_5 import get_conv5_b_max_pool5_lstm_5_lin_5_model
 from nns.conv5_max_pool5_lstm_5_lin_5 import get_conv5_max_pool5_lstm_5_lin_5_model
 from nns.conv_linear import get_conv_linear_model
 from nns.conv_max_pool import get_max_pool_convolution_model
+from nns.convolution_b import get_convolutional_b_model
 
 from nns.linear import get_linear_model
 from nns.convolution import get_convolutional_model
@@ -31,27 +33,40 @@ models = {
     'convolution': {
         'nn': get_convolutional_model
     },
+    'convolution_b': {
+        'nn': get_convolutional_b_model
+    },
     'conv_linear': {
         'nn': get_conv_linear_model
     },
     'conv_max_pool': {
         'nn': get_max_pool_convolution_model
     },
-    'conv_max_lstm_lin': {
-        'nn': get_conv_max_lstm_lin_model
+    'big_block_01': {
+        'nn': get_one_block
     },
-    'conv_b_max_lstm_lin': {
-        'nn': get_conv_b_max_lstm_lin_model
+    'big_block_05': {
+        'nn': get_five_blocks
     },
-    'conv5_max_pool5_lstm_5_lin_5': {
-        'nn': get_conv5_max_pool5_lstm_5_lin_5_model
+    'big_block_10': {
+        'nn': get_ten_blocks
     },
-    'conv5_b_max_pool5_lstm_5_lin_5': {
-        'nn': get_conv5_b_max_pool5_lstm_5_lin_5_model
-    },
-    'conv10_b_max_pool5_lstm_10_lin_10': {
-        'nn': get_conv10_b_max_pool5_lstm_10_lin_10_model
-    },
+
+    # 'conv_max_lstm_lin': {
+    #     'nn': get_conv_max_lstm_lin_model
+    # },
+    # 'conv_b_max_lstm_lin': {
+    #     'nn': get_conv_b_max_lstm_lin_model
+    # },
+    # 'conv5_max_pool5_lstm_5_lin_5': {
+    #     'nn': get_conv5_max_pool5_lstm_5_lin_5_model
+    # },
+    # 'conv5_b_max_pool5_lstm_5_lin_5': {
+    #     'nn': get_conv5_b_max_pool5_lstm_5_lin_5_model
+    # },
+    # 'conv10_b_max_pool5_lstm_10_lin_10': {
+    #     'nn': get_conv10_b_max_pool5_lstm_10_lin_10_model
+    # },
     'lstm': {
         'nn': get_lstm_model
     }
