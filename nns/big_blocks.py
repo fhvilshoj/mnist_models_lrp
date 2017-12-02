@@ -75,11 +75,11 @@ def get_model_with_bolcks(blocks, x, y_, is_training, *args):
 
                 lin_activation = tf.matmul(lstm_output_reshaped, W1) + b1
 
-            output = tf.nn.relu(lin_activation)
+                output = tf.nn.relu(lin_activation)
 
             # linear_out = tf.nn.dropout(linear_out, keep_prob)
 
-    output = tf.nn.dropout(output, keep_prob)
+    # output = tf.nn.dropout(output, keep_prob)
 
     with tf.name_scope("linear_out"):
         W2 = tf.Variable(tf.truncated_normal((784, 10), stddev=0.1),
