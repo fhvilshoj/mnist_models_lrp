@@ -15,7 +15,7 @@ class DataFeed(object):
         self.shuffle = shuffle
         self.permutation = []
         self.offset = 0
-
+        np.random.seed(42)
         if not shuffle:
             # Shuffle this one time and never again
             self.permutation = np.random.permutation(self.max)

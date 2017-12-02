@@ -149,7 +149,7 @@ def do_lrp_pertubation_tests(configs, selected_model, model_file, destination, *
 
     iterations = kwargs['test_size'] // kwargs['batch_size']
 
-    for config in configs[:3]:
+    for config in configs[]:
         graph = tf.Graph()
         feed.reset_permutation()
 
@@ -161,7 +161,7 @@ def do_lrp_pertubation_tests(configs, selected_model, model_file, destination, *
 
             y, _ = selected_model['nn'](x, y_, is_training)
 
-            print("Constructing lrp with configuration {}".format(config))
+            print("Testing {}".format(config))
             explanation = lrp.lrp(x, y, config)
 
             init = get_initializer(False)
