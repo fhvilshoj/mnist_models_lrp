@@ -9,23 +9,30 @@ data_file = 'mnist.npy'
 
 
 class DataFeed(object):
-    def __init__(self):
+    def __init__(self, shuffle=True):
         self.data = fetch_data()
         self.max = self.data['train_images'].shape[0]
-        self.random_permutation = []
+        self.shuffle = shuffle
+        self.permutation = []
         self.offset = 0
+
+        if not shuffle:
+            # Shuffle this one time and never again
+            self.permutation = np.random.permutation(self.max)
 
         self.reset_permutation()
 
     def reset_permutation(self):
-        self.random_permutation = np.random.permutation(self.max)
+        if self.shuffle:
+            self.permutation = np.random.permutation(self.max)
+
         self.offset = 0
 
     def next(self, batch_size):
         start = self.offset
         self.offset = min(self.offset + batch_size, self.max)
 
-        selection = self.random_permutation[start:self.offset]
+        selection = self.permutation[start:self.offset]
 
         if self.offset == self.max:
             print("resetting")

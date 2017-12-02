@@ -1,2 +1,2 @@
-model_checkpoint_path: "big_block_05.ckpt"
-all_model_checkpoint_paths: "big_block_05.ckpt"
+model_checkpoint_path: "big_block_04.ckpt"
+all_model_checkpoint_paths: "big_block_04.ckpt"

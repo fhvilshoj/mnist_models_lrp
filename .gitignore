@@ -1,5 +1,6 @@
 MNIST_data/
-
+.idea/
+models/old
 # Created by https://www.gitignore.io/api/python,pycharm,emacs,linux,windows
 
 ### Emacs ###
