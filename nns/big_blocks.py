@@ -15,7 +15,7 @@ def get_ten_blocks(*args):
 
 def get_model_with_bolcks(blocks, x, y_, is_training, *args):
     keep_prob = tf.cond(is_training,
-                        true_fn=lambda: 0.7,
+                        true_fn=lambda: 0.8,
                         false_fn=lambda: 1.)
 
     output = x
@@ -79,7 +79,7 @@ def get_model_with_bolcks(blocks, x, y_, is_training, *args):
 
             # linear_out = tf.nn.dropout(linear_out, keep_prob)
 
-            output = tf.nn.dropout(output, keep_prob)
+    output = tf.nn.dropout(output, keep_prob)
 
     with tf.name_scope("linear_out"):
         W2 = tf.Variable(tf.truncated_normal((784, 10), stddev=0.1),
@@ -98,7 +98,7 @@ def get_model_with_bolcks(blocks, x, y_, is_training, *args):
     cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(labels=y_, logits=y))
 
     # Training
-    train_step = tf.train.AdamOptimizer(8e-5).minimize(cross_entropy)
+    train_step = tf.train.AdamOptimizer(1.e-4).minimize(cross_entropy)
     # train_step = tf.train.GradientDescentOptimizer(0.001).minimize(cross_entropy)
 
     return tf.nn.softmax(linear_out), train_step
