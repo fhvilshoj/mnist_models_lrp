@@ -3,7 +3,7 @@ import tensorflow as tf
 
 from data_feed import DataFeed
 from nns.batch_norm import get_batch_norm_model
-from nns.big_blocks import get_one_block, get_five_blocks, get_ten_blocks
+from nns.big_blocks import get_one_block, get_two_blocks, get_four_blocks, get_eight_blocks
 from nns.con_b_max_lstm_lin import get_conv_b_max_lstm_lin_model
 from nns.conv10_b_max_pool5_lstm_10_lin_10 import get_conv10_b_max_pool5_lstm_10_lin_10_model
 from nns.conv5_b_max_pool5_lstm_5_lin_5 import get_conv5_b_max_pool5_lstm_5_lin_5_model
@@ -45,11 +45,14 @@ models = {
     'big_block_01': {
         'nn': get_one_block
     },
-    'big_block_05': {
-        'nn': get_five_blocks
+    'big_block_02': {
+        'nn': get_two_blocks
     },
-    'big_block_10': {
-        'nn': get_ten_blocks
+    'big_block_04': {
+        'nn': get_four_blocks
+    },
+    'big_block_08': {
+        'nn': get_eight_blocks
     },
 
     # 'conv_max_lstm_lin': {

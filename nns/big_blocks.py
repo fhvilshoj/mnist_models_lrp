@@ -5,12 +5,24 @@ def get_one_block(*args):
     return get_model_with_bolcks(1, *args)
 
 
-def get_five_blocks(*args):
-    return get_model_with_bolcks(5, *args)
+def get_two_blocks(*args):
+    return get_model_with_bolcks(2, *args)
 
 
-def get_ten_blocks(*args):
-    return get_model_with_bolcks(10, *args)
+def get_four_blocks(*args):
+    return get_model_with_bolcks(4, *args)
+
+
+def get_eight_blocks(*args):
+    return get_model_with_bolcks(8, *args)
+
+#
+# def get_five_blocks(*args):
+#     return get_model_with_bolcks(5, *args)
+#
+#
+# def get_ten_blocks(*args):
+#     return get_model_with_bolcks(10, *args)
 
 
 def get_model_with_bolcks(blocks, x, y_, is_training, *args):
@@ -40,7 +52,7 @@ def get_model_with_bolcks(blocks, x, y_, is_training, *args):
                 conv_out = tf.contrib.layers.batch_norm(
                     conv_out,
                     center=True,
-                    scale=True,
+                    scale=False,
                     is_training=is_training,
                 )
 
