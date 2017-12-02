@@ -5,7 +5,7 @@ import inquirer
 import sys
 import os
 
-from configuration import LOG_LEVEL
+from lrp.configuration import LOG_LEVEL
 
 from data_feed import DataFeed
 
@@ -149,7 +149,7 @@ def do_lrp_pertubation_tests(configs, selected_model, model_file, destination, *
 
     iterations = kwargs['test_size'] // kwargs['batch_size']
 
-    for config in configs[]:
+    for config in configs:
         graph = tf.Graph()
         feed.reset_permutation()
 
