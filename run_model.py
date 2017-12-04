@@ -27,7 +27,7 @@ from lrp import lrp
 model_dir = "./models"
 
 models = {
-    'nn1': {  # NN1
+    'nn01': {  # NN1
         'nn': get_linear_model,
         #         lin    conv  lstm   maxp   batchnormalization
         'confs': [True, False, False, False, False]
@@ -37,12 +37,12 @@ models = {
     #     #         lin    conv  lstm   maxp   batchnormalization
     #     'confs': [True, True, False, True, False]
     # },
-    'nn2': { # NN2
+    'nn02': { # NN2
         'nn': get_convolutional_model,
         #         lin    conv  lstm   maxp   batchnormalization
         'confs': [True, True, False, False, False]
     },
-    'nn5': { # NN5
+    'nn05': { # NN5
         'nn': get_convolutional_b_model,
         #         lin    conv  lstm   maxp   batchnormalization
         'confs': [True, True, False, False, True]
@@ -52,22 +52,22 @@ models = {
     #     #         lin    conv  lstm   maxp   batchnormalization
     #     'confs': [True, True, False, False, False]
     # },
-    'nn6': { # NN6
+    'nn06': { # NN6
         'nn': get_max_pool_convolution_model,
         #         lin    conv  lstm   maxp   batchnormalization
         'confs': [True, True, False, True, False]
     },
-    'nn7': { # NN7
+    'nn07': { # NN7
         'nn': get_one_block,
         #         lin    conv  lstm   maxp   batchnormalization
         'confs': [True, True, True, True, True]
     },
-    'nn8': { # NN8
+    'nn08': { # NN8
         'nn': get_two_blocks,
         #         lin    conv  lstm   maxp   batchnormalization
         'confs': [True, True, True, True, True]
     },
-    'nn9': { # NN9
+    'nn09': { # NN9
         'nn': get_four_blocks,
         #         lin    conv  lstm   maxp   batchnormalization
         'confs': [True, True, True, True, True]
@@ -77,7 +77,7 @@ models = {
         #         lin    conv  lstm   maxp   batchnormalization
         'confs': [True, True, True, True, True]
     },
-    'nn4': { # NN4
+    'nn04': { # NN4
         'nn': get_lstm_model,
         #         lin    conv  lstm   maxp   batchnormalization
         'confs': [True, False, True, False, False]
