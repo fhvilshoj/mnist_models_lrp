@@ -107,7 +107,10 @@ def run_model(selected_model_names, **kwargs):
         print("Evaluating {}".format(selected_model_name.title()))
 
         selected_model = models[selected_model_name]
-        configs = configurations.get_configurations_for_layers(*selected_model['confs'])
+        if(kwargs['use_old']):
+            configs = configurations.get_configurations()
+        else:
+            configs = configurations.get_configurations_for_layers(*selected_model['confs'])
 
         model_file = '%s/%s.ckpt' % (model_dir, selected_model_name)
 
@@ -170,7 +173,7 @@ def do_lrp_pertubation_tests(configs, selected_model, model_file, destination, *
     feed = DataFeed()
 
     iterations = kwargs['test_size'] // kwargs['batch_size']
-
+    
     start = kwargs['start']
     end = kwargs['end']
     if end == -1:
@@ -286,7 +289,8 @@ if __name__ == '__main__':
     parser.add_argument('--end', type=int, default=-1)
     parser.add_argument('-t', '--test-size', type=int, default=1000,
                         help='Do pertubations on `test-size` samples')
-
+    parser.add_argument('--use-old', action='store_true')
+    
     args = parser.parse_args()
 
     # Disable console prints
