@@ -28,37 +28,48 @@ model_dir = "./models"
 
 models = {
     'linear': {
-        'nn': get_linear_model
+        'nn': get_linear_model,
+        'confs': [True, False, False, False, False]
     },
     'tensorflow_guide_99p': {
-        'nn': get_tensorflow_guide_99p_model
+        'nn': get_tensorflow_guide_99p_model,
+        'confs': [True, True, False, True, False]
     },
     'convolution': {
-        'nn': get_convolutional_model
+        'nn': get_convolutional_model,
+        'confs': [True, True, False, False, False]
     },
     'convolution_b': {
-        'nn': get_convolutional_b_model
+        'nn': get_convolutional_b_model,
+        'confs': [True, True, False, False, True]
     },
     'conv_linear': {
-        'nn': get_conv_linear_model
+        'nn': get_conv_linear_model,
+        'confs': [True, True, False, False, True]
     },
     'conv_max_pool': {
-        'nn': get_max_pool_convolution_model
+        'nn': get_max_pool_convolution_model,
+        'confs': [True, True, False, True, False]
     },
     'big_block_01': {
-        'nn': get_one_block
+        'nn': get_one_block,
+        'confs': [True, True, True, True, True]
     },
     'big_block_02': {
-        'nn': get_two_blocks
+        'nn': get_two_blocks,
+        'confs': [True, True, True, True, True]
     },
     'big_block_04': {
-        'nn': get_four_blocks
+        'nn': get_four_blocks,
+        'confs': [True, True, True, True, True]
     },
     'big_block_08': {
-        'nn': get_eight_blocks
+        'nn': get_eight_blocks,
+        'confs': [True, True, True, True, True]
     },
     'lstm': {
-        'nn': get_lstm_model
+        'nn': get_lstm_model,
+        'confs': [True, False, True, False, False]
     }
 }
 
@@ -72,8 +83,6 @@ def get_initializer(train):
 
 
 def run_model(selected_model_names, **kwargs):
-    configs = configurations.get_configurations()
-
     destination = "./pertubation/results"
 
     i = 1
@@ -87,6 +96,8 @@ def run_model(selected_model_names, **kwargs):
         print("Evaluating {}".format(selected_model_name.title()))
 
         selected_model = models[selected_model_name]
+        configs = configurations.get_configurations_for_layers(*selected_model['confs'])
+
         model_file = '%s/%s.ckpt' % (model_dir, selected_model_name)
 
         if kwargs['lrp']:
@@ -149,7 +160,12 @@ def do_lrp_pertubation_tests(configs, selected_model, model_file, destination, *
 
     iterations = kwargs['test_size'] // kwargs['batch_size']
 
-    for config in configs:
+    start = kwargs['start']
+    end = kwargs['end']
+    if end == -1:
+        end = len(configs)
+        
+    for config_idx, config in enumerate(configs[start:end]):
         graph = tf.Graph()
         feed.reset_permutation()
 
@@ -161,7 +177,7 @@ def do_lrp_pertubation_tests(configs, selected_model, model_file, destination, *
 
             y, _ = selected_model['nn'](x, y_, is_training)
 
-            print("Testing {}".format(config))
+            print("Testing ({}/{}) {}".format(config_idx, end-start, config))
             explanation = lrp.lrp(x, y, config)
 
             init = get_initializer(False)
@@ -255,6 +271,8 @@ if __name__ == '__main__':
     parser.add_argument('--lrp', action='store_true',
                         help='Do lrp pertubation tests on models')
     parser.add_argument('-p', '--pertubations', type=int, default=100)
+    parser.add_argument('--start', type=int, default=0)
+    parser.add_argument('--end', type=int, default=-1)
     parser.add_argument('-t', '--test-size', type=int, default=1000,
                         help='Do pertubations on `test-size` samples')
 
