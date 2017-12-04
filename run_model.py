@@ -29,46 +29,57 @@ model_dir = "./models"
 models = {
     'linear': {
         'nn': get_linear_model,
+        #         lin    conv  lstm   maxp   batchnormalization
         'confs': [True, False, False, False, False]
     },
     'tensorflow_guide_99p': {
         'nn': get_tensorflow_guide_99p_model,
+        #         lin    conv  lstm   maxp   batchnormalization
         'confs': [True, True, False, True, False]
     },
     'convolution': {
         'nn': get_convolutional_model,
+        #         lin    conv  lstm   maxp   batchnormalization
         'confs': [True, True, False, False, False]
     },
     'convolution_b': {
         'nn': get_convolutional_b_model,
+        #         lin    conv  lstm   maxp   batchnormalization
         'confs': [True, True, False, False, True]
     },
     'conv_linear': {
         'nn': get_conv_linear_model,
-        'confs': [True, True, False, False, True]
+        #         lin    conv  lstm   maxp   batchnormalization
+        'confs': [True, True, False, False, False]
     },
     'conv_max_pool': {
         'nn': get_max_pool_convolution_model,
+        #         lin    conv  lstm   maxp   batchnormalization
         'confs': [True, True, False, True, False]
     },
     'big_block_01': {
         'nn': get_one_block,
+        #         lin    conv  lstm   maxp   batchnormalization
         'confs': [True, True, True, True, True]
     },
     'big_block_02': {
         'nn': get_two_blocks,
+        #         lin    conv  lstm   maxp   batchnormalization
         'confs': [True, True, True, True, True]
     },
     'big_block_04': {
         'nn': get_four_blocks,
+        #         lin    conv  lstm   maxp   batchnormalization
         'confs': [True, True, True, True, True]
     },
     'big_block_08': {
         'nn': get_eight_blocks,
+        #         lin    conv  lstm   maxp   batchnormalization
         'confs': [True, True, True, True, True]
     },
     'lstm': {
         'nn': get_lstm_model,
+        #         lin    conv  lstm   maxp   batchnormalization
         'confs': [True, False, True, False, False]
     }
 }
