@@ -8,6 +8,8 @@ import os
 from lrp.configuration import LOG_LEVEL
 
 from data_feed import DataFeed
+from sensitivity_analysis_relevance import get_sensitivity_relevance
+from random_relevance import get_random_relevance
 
 from nns.big_blocks import get_one_block, get_two_blocks, get_four_blocks, get_eight_blocks
 from nns.conv_linear import get_conv_linear_model
@@ -112,7 +114,9 @@ def run_model(selected_model_names, **kwargs):
         print("Evaluating {}".format(selected_model_name.title()))
 
         selected_model = models[selected_model_name]
-        if(kwargs['use_old']):
+        if(kwargs['baselines']):
+            configs = ['random', 'sensitivity-analysis']
+        elif(kwargs['use_old']):
             configs = configurations.get_configurations()
         else:
             configs = configurations.get_configurations_for_layers(*selected_model['confs'])
@@ -172,6 +176,11 @@ def do_pertubations(config, session, feed, explanation, iterations, batch_size, 
     sys.stdout.write("[%-20s] %d%%\n" % ('=' * 20, 100))
     sys.stdout.flush()
 
+def get_baseline_relevance(config, inp, out):
+    if config == 'random':
+        return get_random_relevance(inp)
+    else:
+        return get_sesitivity_relevance(inp, out)
 
 def do_lrp_pertubation_tests(configs, selected_model, model_file, destination, **kwargs):
     result_writer = ResultWriter(destination)
@@ -196,8 +205,16 @@ def do_lrp_pertubation_tests(configs, selected_model, model_file, destination, *
 
             y, _ = selected_model['nn'](x, y_, is_training)
 
-            print("Testing ({}/{}) {}".format(config_idx, end-start, config))
-            explanation = lrp.lrp(x, y, config)
+            if isinstance(config, str):
+                if config == 'random':
+                    print("Testing random relevance")
+                    explanation = get_random_relevance(x)
+                else:
+                    print("Testing sensitivity analysis")
+                    explanation = get_sensitivity_relevance(x, y)
+            else:
+                print("Testing ({}/{}) {}".format(config_idx, end-start, config))
+                explanation = lrp.lrp(x, y, config)
 
             init = get_initializer(False)
 
@@ -295,6 +312,7 @@ if __name__ == '__main__':
     parser.add_argument('-t', '--test-size', type=int, default=1000,
                         help='Do pertubations on `test-size` samples')
     parser.add_argument('--use-old', action='store_true')
+    parser.add_argument('--baselines', action='store_true')
     
     args = parser.parse_args()
 
