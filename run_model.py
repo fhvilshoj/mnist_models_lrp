@@ -184,7 +184,7 @@ def get_baseline_relevance(config, inp, out):
 
 def do_lrp_pertubation_tests(configs, selected_model, model_file, destination, **kwargs):
     result_writer = ResultWriter(destination)
-    feed = DataFeed()
+    feed = DataFeed(False)
 
     iterations = kwargs['test_size'] // kwargs['batch_size']
     
