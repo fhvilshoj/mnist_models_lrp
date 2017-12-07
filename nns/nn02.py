@@ -1,7 +1,7 @@
 import tensorflow as tf
 
 
-def get_linear_nn03_model(x, y_, is_training):    
+def get_linear_nn02_model(x, y_, is_training):    
     with tf.name_scope("linear"):
         W1 = tf.Variable(tf.truncated_normal((784, 1024), stddev=0.1),
                         trainable=True)

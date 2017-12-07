@@ -15,7 +15,7 @@ from nns.big_blocks import get_one_block, get_two_blocks, get_four_blocks, get_e
 from nns.conv_linear import get_conv_linear_model
 from nns.conv_max_pool import get_max_pool_convolution_model
 from nns.convolution_b import get_convolutional_b_model
-from nns.nn03 import get_linear_nn03_model
+from nns.nn02 import get_linear_nn02_model
 from nns.linear import get_linear_model
 from nns.convolution import get_convolutional_model
 from nns.lstm import get_lstm_model
@@ -39,13 +39,13 @@ models = {
     #     #         lin    conv  lstm   maxp   batchnormalization
     #     'confs': [True, True, False, True, False]
     # },
-    'nn02': { # NN2
+    'nn03': { # NN3
         'nn': get_convolutional_model,
         #         lin    conv  lstm   maxp   batchnormalization
         'confs': [True, True, False, False, False]
     },
-    'nn03': { # NN3
-        'nn': get_linear_nn03_model,
+    'nn02': { # NN2
+        'nn': get_linear_nn02_model,
         #         lin    conv  lstm  maxp    batchnormalization
         'confs': [True, False, False, False, False]
     },
