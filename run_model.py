@@ -216,8 +216,6 @@ def do_lrp_pertubation_tests(configs, selected_model, model_file, destination, *
                 print("Testing ({}/{}) {}".format(config_idx, end-start, config))
                 with tf.name_scope("LRP"):
                     explanation = lrp.lrp(x, y, config)
-                graph_saver = tf.summary.FileWriter('/home/fhv/Projects/AU/thesis/mnist_models_lrp/models/summaries')
-                graph_saver.add_graph(graph)
                 print("Saved graph to file")
 
             init = get_initializer(False)
@@ -257,9 +255,6 @@ def test_model(model_file, selected_model, **kwargs):
 
         important_variables = tf.trainable_variables()
         important_variables.extend([v for v in tf.global_variables() if 'moving_' in v.name])
-
-        graph_saver = tf.summary.FileWriter('/home/fhv/Projects/AU/thesis/mnist_models_lrp/models/summaries')
-        graph_saver.add_graph(graph)
 
         saver = tf.train.Saver(important_variables)
 
