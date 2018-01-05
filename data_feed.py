@@ -12,6 +12,8 @@ class DataFeed(object):
     def __init__(self, shuffle=True):
         self.data = fetch_data()
         self.max = self.data['train_images'].shape[0]
+        self.val_max = self.data['validation_images'].shape[0]
+        self.test_max = self.data['test_images'].shape[0]
         self.shuffle = shuffle
         self.permutation = []
         self.offset = 0
@@ -44,11 +46,13 @@ class DataFeed(object):
         selection = np.random.permutation(self.max)[:size]
         return self.data['train_images'][selection], self.data['train_labels'][selection]
 
-    def validation(self):
-        return self.data['validation_images'], self.data['validation_labels']
+    def validation(self, size=200):
+        selection = np.random.permutation(self.val_max)[:size]
+        return self.data['validation_images'][selection], self.data['validation_labels'][selection]
 
-    def test(self):
-        return self.data['test_images'], self.data['test_labels']
+    def test(self, size=200):
+        selection = np.random.permutation(self.test_max)[:size]
+        return self.data['test_images'][selection], self.data['test_labels'][selection]
 
 
 def div0( a, b ):
