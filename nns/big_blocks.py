@@ -98,7 +98,7 @@ def get_model_with_bolcks(blocks, sequence_length, keep_prob, x, y_, is_training
 
     # linear_out = tf.nn.dropout(linear_out, keep_prob)
 
-    output = tf.nn.dropout(output, keep_prob)
+    # output = tf.nn.dropout(output, keep_prob)
 
     with tf.name_scope("linear_out"):
         W2 = tf.Variable(tf.truncated_normal((LINEAR_UNITS, 10), stddev=0.1),
