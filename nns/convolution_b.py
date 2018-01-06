@@ -7,8 +7,8 @@ def get_convolutional_b_model(x, y_, is_training):
         input_reshaped = tf.reshape(x, (-1, 28, 28, 1))
 
         # Kernel shape (height, width, input_channels, output_channels)
-        K = tf.Variable(tf.truncated_normal((3, 3, 1, 2), stddev=0.1))
-        kb = tf.Variable(tf.constant(0.1, shape=[2,]))
+        K = tf.Variable(tf.truncated_normal((3, 3, 1, 4), stddev=0.1))
+        kb = tf.Variable(tf.constant(0.1, shape=[4,]))
 
         conv_out = tf.nn.conv2d(input_reshaped, K, [1, 1, 1, 1], 'SAME')
         conv_out = tf.nn.bias_add(conv_out, kb)
@@ -26,10 +26,12 @@ def get_convolutional_b_model(x, y_, is_training):
         conv_out = tf.nn.relu(conv_out)
 
         # Shape (None, 784)
-        conv_out = tf.reshape(conv_out, (-1, 784*2))
+        conv_out = tf.reshape(conv_out, (-1, 784*4))
+
+    # conv_out = tf.nn.dropout(conv_out, keep_prob=0.5)
 
     with tf.name_scope("linear"):
-        W = tf.Variable(tf.truncated_normal((784*2, 10), stddev=0.1),
+        W = tf.Variable(tf.truncated_normal((784*4, 10), stddev=0.1),
                         trainable=True)
         b = tf.Variable(tf.constant(0.1, shape=(10,), dtype=tf.float32))
 

@@ -1,7 +1,7 @@
 import tensorflow as tf
 
 def get_lstm_model(x, y_, is_training):
-    lstm_units = 10
+    lstm_units = 64
 
     # x has shape (None, 784)
     x_reshaped = tf.reshape(x, (-1, 28, 28))
@@ -14,9 +14,9 @@ def get_lstm_model(x, y_, is_training):
     # lstm_output shape: (None, 28, 5)
     lstm_output, _ = tf.nn.dynamic_rnn(lstm, x_reshaped, dtype=tf.float32)
 
-    lstm_output_reshaped = tf.reshape(lstm_output, (-1, 280))
+    lstm_output_reshaped = tf.reshape(lstm_output, (-1, 28 * lstm_units))
 
-    W = tf.Variable(tf.truncated_normal((280, 10), stddev=0.1),
+    W = tf.Variable(tf.truncated_normal((28 * lstm_units, 10), stddev=0.1),
                     trainable=True)
     b = tf.Variable(tf.constant(0.1, shape=(10,), dtype=tf.float32))
 
