@@ -1,2 +1,2 @@
-model_checkpoint_path: "nn09.ckpt"
-all_model_checkpoint_paths: "nn09.ckpt"
+model_checkpoint_path: "nn08.ckpt"
+all_model_checkpoint_paths: "nn08.ckpt"
