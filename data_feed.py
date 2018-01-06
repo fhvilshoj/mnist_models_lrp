@@ -46,7 +46,7 @@ class DataFeed(object):
         selection = np.random.permutation(self.max)[:size]
         return self.data['train_images'][selection], self.data['train_labels'][selection]
 
-    def validation(self, size=200):
+    def validation(self, size=1000):
         selection = np.random.permutation(self.val_max)[:size]
         return self.data['validation_images'][selection], self.data['validation_labels'][selection]
 

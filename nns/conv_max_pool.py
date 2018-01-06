@@ -7,8 +7,8 @@ def get_max_pool_convolution_model(x, y_, *args):
         input_reshaped = tf.reshape(x, (-1, 28, 28, 1))
 
         # Kernel shape (height, width, input_channels, output_channels)
-        K = tf.Variable(tf.truncated_normal((3, 3, 1, 2), stddev=0.1))
-        kb = tf.Variable(tf.constant(0.1, shape=[2,]))
+        K = tf.Variable(tf.truncated_normal((3, 3, 1, 4), stddev=0.1))
+        kb = tf.Variable(tf.constant(0.1, shape=[4,]))
 
         conv_out = tf.nn.conv2d(input_reshaped, K, [1, 1, 1, 1], 'SAME')
         conv_out = tf.nn.bias_add(conv_out, kb)
@@ -20,10 +20,10 @@ def get_max_pool_convolution_model(x, y_, *args):
         max_out = tf.nn.max_pool(conv_out, [1, 2, 2, 1], [1, 2, 2, 1], 'SAME')
 
         # Shape (None, 784)
-        max_out = tf.reshape(max_out, (-1, 14*14*2))
+        max_out = tf.reshape(max_out, (-1, 14*14*4))
 
     with tf.name_scope("linear"):
-        W = tf.Variable(tf.truncated_normal((14*14*2, 10), stddev=0.1),
+        W = tf.Variable(tf.truncated_normal((14*14*4, 10), stddev=0.1),
                         trainable=True)
         b = tf.Variable(tf.constant(0.1, shape=(10,), dtype=tf.float32))
 
