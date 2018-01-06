@@ -106,7 +106,7 @@ def run_model(selected_model_names, **kwargs):
     i = 1
     d = destination
     while os.path.exists(d):
-        d = "{}_{:02}".format(destination, i)
+        d = "{}{:02}".format(destination, i)
         i += 1
 
     for selected_model_name in selected_model_names:
