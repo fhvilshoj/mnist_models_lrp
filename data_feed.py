@@ -50,9 +50,8 @@ class DataFeed(object):
         selection = np.random.permutation(self.val_max)[:size]
         return self.data['validation_images'][selection], self.data['validation_labels'][selection]
 
-    def test(self, size=200):
-        selection = np.random.permutation(self.test_max)[:size]
-        return self.data['test_images'][selection], self.data['test_labels'][selection]
+    def test(self):
+        return self.data['test_images'], self.data['test_labels']
 
 
 def div0( a, b ):
