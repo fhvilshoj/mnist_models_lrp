@@ -9,8 +9,7 @@ def get_linear_model(x, y_, is_training):
     y = tf.matmul(x, W) + b
 
     cross_entropy = tf.reduce_mean(
-        tf.nn.softmax_cross_entropy_with_logits(labels=y_, logits=y)) \
-                    + 0.01 * tf.nn.l2_loss(W)
+        tf.nn.softmax_cross_entropy_with_logits(labels=y_, logits=y))
 
     # Training
     train_step = tf.train.AdamOptimizer().minimize(cross_entropy)

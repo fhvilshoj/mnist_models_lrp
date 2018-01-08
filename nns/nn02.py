@@ -9,6 +9,7 @@ def get_linear_nn02_model(x, y_, is_training):
 
         y = tf.nn.relu(tf.matmul(x, W1) + b1)
 
+    # y = tf.nn.dropout(y, keep_prob=0.5)
     with tf.name_scope("linear_out"):
         W2 = tf.Variable(tf.truncated_normal((1024, 10), stddev=0.1),
                          trainable=True)
@@ -20,7 +21,7 @@ def get_linear_nn02_model(x, y_, is_training):
         tf.nn.softmax_cross_entropy_with_logits(labels=y_, logits=y))
     
     # Training
-    train_step = tf.train.AdamOptimizer().minimize(cross_entropy)
+    train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
 
     # The fully connected layer
     return tf.nn.softmax(y), train_step
