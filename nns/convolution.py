@@ -36,7 +36,9 @@ def get_convolutional_model(x, y_, is_training):
     # model's unnormalized model prediction and sums across all classes, and tf.reduce_mean
     # takes the average over these sums
     cross_entropy = tf.reduce_mean(
-        tf.nn.softmax_cross_entropy_with_logits(labels=y_, logits=y))
+        tf.nn.softmax_cross_entropy_with_logits(labels=y_, logits=y)) \
+                    + 0.005 * tf.nn.l2_loss(K) \
+                    + 0.001 * tf.nn.l2_loss(W)
 
     # Training
     train_step = tf.train.AdamOptimizer(1.e-4).minimize(cross_entropy)
