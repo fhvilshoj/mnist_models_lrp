@@ -16,13 +16,13 @@ def get_max_pool_convolution_model(x, y_, *args):
         # Shape (None, 28, 28, 1)
         conv_out = tf.nn.relu(conv_out)
 
+    conv_out = tf.nn.dropout(conv_out, keep_prob=0.8)
+
     with tf.name_scope("max_pool"):
         max_out = tf.nn.max_pool(conv_out, [1, 2, 2, 1], [1, 2, 2, 1], 'SAME')
 
         # Shape (None, 784)
         max_out = tf.reshape(max_out, (-1, 14*14*4))
-
-    max_out = tf.nn.dropout(max_out, keep_prob=0.5)
 
     with tf.name_scope("linear"):
         W = tf.Variable(tf.truncated_normal((14*14*4, 10), stddev=0.1),
