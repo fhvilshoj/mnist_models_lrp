@@ -16,6 +16,8 @@ def get_lstm_model(x, y_, is_training):
 
     lstm_output_reshaped = tf.reshape(lstm_output, (-1, 28 * lstm_units))
 
+    # lstm_output_reshaped = tf.nn.dropout(lstm_output_reshaped, keep_prob=0.5)
+    
     W = tf.Variable(tf.truncated_normal((28 * lstm_units, 10), stddev=0.1),
                     trainable=True)
     b = tf.Variable(tf.constant(0.1, shape=(10,), dtype=tf.float32))
