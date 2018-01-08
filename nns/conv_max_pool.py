@@ -22,6 +22,8 @@ def get_max_pool_convolution_model(x, y_, *args):
         # Shape (None, 784)
         max_out = tf.reshape(max_out, (-1, 14*14*4))
 
+    max_out = tf.nn.dropout(max_out, keep_prob=0.5)
+
     with tf.name_scope("linear"):
         W = tf.Variable(tf.truncated_normal((14*14*4, 10), stddev=0.1),
                         trainable=True)
@@ -37,9 +39,7 @@ def get_max_pool_convolution_model(x, y_, *args):
     # model's unnormalized model prediction and sums across all classes, and tf.reduce_mean
     # takes the average over these sums
     cross_entropy = tf.reduce_mean(
-        tf.nn.softmax_cross_entropy_with_logits(labels=y_, logits=y)) \
-                    + 0.005 * tf.nn.l2_loss(K) \
-                    + 0.001 * tf.nn.l2_loss(W)
+        tf.nn.softmax_cross_entropy_with_logits(labels=y_, logits=y))
 
     # Training
     train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
