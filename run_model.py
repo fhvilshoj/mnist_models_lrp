@@ -176,12 +176,6 @@ def do_pertubations(config, session, feed, explanation, iterations, batch_size, 
     sys.stdout.write("[%-20s] %d%%\n" % ('=' * 20, 100))
     sys.stdout.flush()
 
-def get_baseline_relevance(config, inp, out):
-    if config == 'random':
-        return get_random_relevance(inp)
-    else:
-        return get_sesitivity_relevance(inp, out)
-
 def do_lrp_pertubation_tests(configs, selected_model, model_file, destination, **kwargs):
     result_writer = ResultWriter(destination)
     feed = DataFeed(False)
@@ -216,7 +210,6 @@ def do_lrp_pertubation_tests(configs, selected_model, model_file, destination, *
                 print("Testing ({}/{}) {}".format(config_idx, end-start, config))
                 with tf.name_scope("LRP"):
                     explanation = lrp.lrp(x, y, config)
-                print("Saved graph to file")
 
             init = get_initializer(False)
 
@@ -308,7 +301,7 @@ if __name__ == '__main__':
                         help='Restore model to continue training')
     parser.add_argument('--lrp', action='store_true',
                         help='Do lrp pertubation tests on models')
-    parser.add_argument('-p', '--pertubations', type=int, default=100)
+    parser.add_argument('-p', '--pertubations', type=int, default=101)
     parser.add_argument('--start', type=int, default=0)
     parser.add_argument('--end', type=int, default=-1)
     parser.add_argument('-t', '--test-size', type=int, default=1000,
