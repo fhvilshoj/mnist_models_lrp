@@ -16,7 +16,7 @@ def get_max_pool_convolution_model(x, y_, *args):
         # Shape (None, 28, 28, 1)
         conv_out = tf.nn.relu(conv_out)
 
-    conv_out = tf.nn.dropout(conv_out, keep_prob=0.8)
+    # conv_out = tf.nn.dropout(conv_out, keep_prob=0.8)
 
     with tf.name_scope("max_pool"):
         max_out = tf.nn.max_pool(conv_out, [1, 2, 2, 1], [1, 2, 2, 1], 'SAME')
