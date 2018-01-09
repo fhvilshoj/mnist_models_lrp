@@ -19,7 +19,7 @@ def get_convolutional_model(x, y_, is_training):
         # Shape (None, 784)
         conv_out = tf.reshape(conv_out, (-1, 784*4))
 
-    conv_out = tf.nn.dropout(conv_out, keep_prob=0.8)
+    #conv_out = tf.nn.dropout(conv_out, keep_prob=0.8)
 
     with tf.name_scope("linear"):
         W = tf.Variable(tf.truncated_normal((784*4, 10), stddev=0.1),
