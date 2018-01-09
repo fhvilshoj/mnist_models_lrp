@@ -13,7 +13,7 @@ def get_convolutional_b_model(x, y_, is_training):
         conv_out = tf.nn.conv2d(input_reshaped, K, [1, 1, 1, 1], 'SAME')
         conv_out = tf.nn.bias_add(conv_out, kb)
 
-        conv_out = tf.nn.dropout(conv_out, keep_prob=0.8)
+        #conv_out = tf.nn.dropout(conv_out, keep_prob=0.8)
 
         conv_out = tf.contrib.layers.batch_norm(
             conv_out,
