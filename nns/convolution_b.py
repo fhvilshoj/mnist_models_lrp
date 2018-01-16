@@ -13,10 +13,12 @@ def get_convolutional_b_model(x, y_, is_training):
         conv_out = tf.nn.conv2d(input_reshaped, K, [1, 1, 1, 1], 'SAME')
         conv_out = tf.nn.bias_add(conv_out, kb)
 
+        #conv_out = tf.nn.dropout(conv_out, keep_prob=0.8)
+
         conv_out = tf.contrib.layers.batch_norm(
             conv_out,
             center=True,
-            scale=False,
+            scale=True,
             is_training=is_training,
             updates_collections=None,
             decay=0.99
@@ -27,8 +29,6 @@ def get_convolutional_b_model(x, y_, is_training):
 
         # Shape (None, 784)
         conv_out = tf.reshape(conv_out, (-1, 784*4))
-
-    # conv_out = tf.nn.dropout(conv_out, keep_prob=0.5)
 
     with tf.name_scope("linear"):
         W = tf.Variable(tf.truncated_normal((784*4, 10), stddev=0.1),
@@ -48,7 +48,7 @@ def get_convolutional_b_model(x, y_, is_training):
         tf.nn.softmax_cross_entropy_with_logits(labels=y_, logits=y))
 
     # Training
-    train_step = tf.train.AdamOptimizer().minimize(cross_entropy)
+    train_step = tf.train.AdamOptimizer(1.e-4).minimize(cross_entropy)
     # train_step = tf.train.GradientDescentOptimizer(0.05).minimize(cross_entropy)
 
     return tf.nn.softmax(linear_out), train_step
