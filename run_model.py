@@ -32,7 +32,7 @@ models = {
     'nn01': {  # NN1
         'nn': get_linear_model,
         #         lin    conv  lstm   maxp   batchnormalization
-        'confs': [True, False, False, False, False]
+        'confs': [True, False, False, False, False, True]
     },
     # 'tensorflow_guide_99p': {
     #     'nn': get_tensorflow_guide_99p_model,
@@ -42,17 +42,17 @@ models = {
     'nn03': { # NN3
         'nn': get_convolutional_model,
         #         lin    conv  lstm   maxp   batchnormalization
-        'confs': [True, True, False, False, False]
+        'confs': [True, True, False, False, False, True]
     },
     'nn02': { # NN2
         'nn': get_linear_nn02_model,
         #         lin    conv  lstm  maxp    batchnormalization
-        'confs': [True, False, False, False, False]
+        'confs': [True, False, False, False, False, True]
     },
     'nn05': { # NN5
         'nn': get_convolutional_b_model,
         #         lin    conv  lstm   maxp   batchnormalization
-        'confs': [True, True, False, False, True]
+        'confs': [True, True, False, False, True, True]
     },
     # 'conv_linear': {
     #     'nn': get_conv_linear_model,
@@ -62,32 +62,32 @@ models = {
     'nn06': { # NN6
         'nn': get_max_pool_convolution_model,
         #         lin    conv  lstm   maxp   batchnormalization
-        'confs': [True, True, False, True, False]
+        'confs': [True, True, False, True, False, True]
     },
     'nn07': { # NN7
         'nn': get_one_block,
         #         lin    conv  lstm   maxp   batchnormalization
-        'confs': [True, True, True, True, True]
+        'confs': [True, True, True, True, True, True]
     },
     'nn08': { # NN8
         'nn': get_two_blocks,
         #         lin    conv  lstm   maxp   batchnormalization
-        'confs': [True, True, True, True, True]
+        'confs': [True, True, True, True, True, True]
     },
     'nn09': { # NN9
         'nn': get_four_blocks,
         #         lin    conv  lstm   maxp   batchnormalization
-        'confs': [True, True, True, True, True]
+        'confs': [True, True, True, True, True, True]
     },
     'nn10': { # NN10
         'nn': get_eight_blocks,
         #         lin    conv  lstm   maxp   batchnormalization
-        'confs': [True, True, True, True, True]
+        'confs': [True, True, True, True, True, True]
     },
     'nn04': { # NN4
         'nn': get_lstm_model,
         #         lin    conv  lstm   maxp   batchnormalization
-        'confs': [True, False, True, False, False]
+        'confs': [True, False, True, False, False, True]
     }
 }
 
