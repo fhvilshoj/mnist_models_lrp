@@ -32,7 +32,9 @@ models = {
     'nn01': {  # NN1
         'nn': get_linear_model,
         #         lin    conv  lstm   maxp   batchnormalization
-        'confs': [True, False, False, False, False, True]
+        'confs': [True, False, False, False, False, True],
+        'lin_first': True,
+        'conv_first': False
     },
     # 'tensorflow_guide_99p': {
     #     'nn': get_tensorflow_guide_99p_model,
@@ -42,17 +44,23 @@ models = {
     'nn03': { # NN3
         'nn': get_convolutional_model,
         #         lin    conv  lstm   maxp   batchnormalization
-        'confs': [True, True, False, False, False, True]
+        'confs': [True, False, False, False, False, True],
+        'lin_first': False,
+        'conv_first': True
     },
     'nn02': { # NN2
         'nn': get_linear_nn02_model,
         #         lin    conv  lstm  maxp    batchnormalization
-        'confs': [True, False, False, False, False, True]
+        'confs': [True, False, False, False, False, True],
+        'lin_first': True,
+        'conv_first': False
     },
     'nn05': { # NN5
         'nn': get_convolutional_b_model,
         #         lin    conv  lstm   maxp   batchnormalization
-        'confs': [True, True, False, False, True, True]
+        'confs': [True, False, False, False, True, True],
+        'lin_first': False,
+        'conv_first': True
     },
     # 'conv_linear': {
     #     'nn': get_conv_linear_model,
@@ -62,32 +70,44 @@ models = {
     'nn06': { # NN6
         'nn': get_max_pool_convolution_model,
         #         lin    conv  lstm   maxp   batchnormalization
-        'confs': [True, True, False, True, False, True]
+        'confs': [True, False, False, True, False, True],
+        'lin_first': False,
+        'conv_first': True
     },
     'nn07': { # NN7
         'nn': get_one_block,
         #         lin    conv  lstm   maxp   batchnormalization
-        'confs': [True, True, True, True, True, True]
+        'confs': [True, False, True, True, True, True],
+        'lin_first': False,
+        'conv_first': True
     },
     'nn08': { # NN8
         'nn': get_two_blocks,
         #         lin    conv  lstm   maxp   batchnormalization
-        'confs': [True, True, True, True, True, True]
+        'confs': [True, True, True, True, True, True],
+        'lin_first': False,
+        'conv_first': True
     },
     'nn09': { # NN9
         'nn': get_four_blocks,
         #         lin    conv  lstm   maxp   batchnormalization
-        'confs': [True, True, True, True, True, True]
+        'confs': [True, True, True, True, True, True],
+        'lin_first': False,
+        'conv_first': True
     },
     'nn10': { # NN10
         'nn': get_eight_blocks,
         #         lin    conv  lstm   maxp   batchnormalization
-        'confs': [True, True, True, True, True, True]
+        'confs': [True, True, True, True, True, True],
+        'lin_first': False,
+        'conv_first': True
     },
     'nn04': { # NN4
         'nn': get_lstm_model,
         #         lin    conv  lstm   maxp   batchnormalization
-        'confs': [True, False, True, False, False, True]
+        'confs': [True, False, True, False, False, False],
+        'lin_first': False,
+        'conv_first': False
     }
 }
 
@@ -119,7 +139,7 @@ def run_model(selected_model_names, **kwargs):
         elif(kwargs['use_old']):
             configs = configurations.get_configurations()
         else:
-            configs = configurations.get_configurations_for_layers(*selected_model['confs'])
+            configs = configurations.get_configurations_for_layers(*selected_model['confs'], '01' in selected_model_name.title())
 
         model_file = '%s/%s.ckpt' % (model_dir, selected_model_name)
 
@@ -134,8 +154,6 @@ def do_pertubations(config, session, feed, explanation, iterations, batch_size, 
     for iteration in range(iterations):
         x_input, y_ = feed.next(batch_size)
         y_ = np.argmax(y_, axis=1)
-
-        l = lambda x: (x, type(x))
 
         y_hat = session.run(y, feed_dict={x_placeholder: x_input})
         y_hat = np.argmax(y_hat, axis=1)
@@ -180,6 +198,12 @@ def do_lrp_pertubation_tests(configs, selected_model, model_file, destination, *
     result_writer = ResultWriter(destination)
     feed = DataFeed(False)
 
+    imgs = np.concatenate([feed.data[s] for s in ['test_images', 'train_images', 'validation_images']], axis=0)
+    mins = np.min(imgs, axis=0)
+    maxs = np.max(imgs, axis=0)
+    lin_mins = np.tile(np.expand_dims(mins, 0), [kwargs['batch_size'], 1]).reshape((-1, 784, 1))
+    lin_maxs = np.tile(np.expand_dims(maxs, 0), [kwargs['batch_size'], 1]).reshape((-1, 784, 1))
+
     iterations = kwargs['test_size'] // kwargs['batch_size']
     
     start = kwargs['start']
@@ -209,6 +233,18 @@ def do_lrp_pertubation_tests(configs, selected_model, model_file, destination, *
             else:
                 print("Testing ({}/{}) {}".format(config_idx, end-start, config))
                 with tf.name_scope("LRP"):
+                    zb = config.get_first_layer_zb()
+                    if zb:
+                        if selected_model['lin_first']:
+                            zb['low'] = lin_mins
+                            zb['high'] = lin_maxs
+                        elif selected_model['conv_first']:
+                            zb['low'] = mins
+                            zb['high'] = maxs
+                        else:
+                            print("Network ({}) cannot use ZB rule".format(destination))
+                            continue
+
                     explanation = lrp.lrp(x, y, config)
 
             init = get_initializer(False)
